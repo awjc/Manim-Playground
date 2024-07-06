@@ -1,5 +1,7 @@
-from manim import *
+import subprocess
+import os
 
+from manim import *
 
 class DifferentRotations(Scene):
     def construct(self):
@@ -16,9 +18,11 @@ class MovingAround(Scene):
         squares = [Square(color=BLACK, fill_opacity=1) for x in range(2)]
 
         self.play(*[s.animate
-                    .shift(2*[RIGHT, LEFT][idx])
-                    .set_fill(ManimColor('#00AA00'))
+                    .shift(1.5*[RIGHT, LEFT][idx])
+                    .set_fill(GREEN)
                     for (idx, s) in enumerate(squares)])
+
+        self.play(*[s.animate.scale(1.5) for idx, s in enumerate(squares)])
         self.play(*[s.animate
                     .scale(0.2)
                     .rotate([-.5, .5][idx] * PI)
@@ -26,15 +30,7 @@ class MovingAround(Scene):
                     for idx, s in enumerate(squares)])
         self.play(*[s.animate
                     .shift(1*[RIGHT, LEFT][idx])
-                    .set_fill(ManimColor('#00AA00'))
-                    for (idx, s) in enumerate(squares)])
-        self.play(*[s.animate
-                    .scale(4)
                     .rotate([-.5, .5][idx] * PI)
-                    .set_fill(BLACK)
-                    for idx, s in enumerate(squares)])
-        self.play(*[s.animate
-                    .shift(2*[RIGHT, LEFT][idx])
                     .set_fill(ManimColor('#00AA00'))
                     for (idx, s) in enumerate(squares)])
         self.play(*[s.animate
@@ -42,3 +38,14 @@ class MovingAround(Scene):
                     .rotate([-.5, .5][idx] * PI)
                     .set_fill(BLACK)
                     for idx, s in enumerate(squares)])
+
+
+FPS = 144
+CLASS_TO_RUN = MovingAround
+
+if __name__ == '__main__':
+    # quality medium (720p)
+    manim_args = ["manim", "-pqm"]
+    manim_args.extend(["--fps", str(FPS)])
+    manim_args.extend([os.path.basename(__file__), CLASS_TO_RUN.__name__])
+    subprocess.run(manim_args)
